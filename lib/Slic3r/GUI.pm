@@ -93,20 +93,59 @@ sub OnInit {
     Slic3r::GUI->save_settings;
     
     #custom code for Julia printer
-      if (!(-f "$datadir/filament/Julia.ini")) 
-      {  
-        my $iniJ = 
-        {
-            options => 
-            {   "bed_temperature" => "0",
-                'extrusion_multiplier' => '1',
-                'filament_diameter' => '3',
-                'first_layer_bed_temperature' => "0",
-                'first_layer_temperature' => '205',
-                'temperature' => '200'
+       
+
+    # if (!(-f "$datadir/filament/PLA.ini")) 
+    # {  
+    #     my $iniJ = 
+    #     {
+    #         options => 
+    #         {   "bed_temperature" => "0",
+    #             'extrusion_multiplier' => '1',
+    #             'filament_diameter' => '3',
+    #             'first_layer_bed_temperature' => "0",
+    #             'first_layer_temperature' => '205',
+    #             'temperature' => '200'
+    #         }
+    #     };
+    #     Slic3r::Config->write_ini("$datadir/filament/PLA.ini",$iniJ);
+    # }
+
+    # if (!(-f "$datadir/filament/SLA.ini")) 
+    # {  
+    #     my $iniJ = 
+    #     {
+    #         options => 
+    #         {   "bed_temperature" => "0",
+    #             'extrusion_multiplier' => '1',
+    #             'filament_diameter' => '3',
+    #             'first_layer_bed_temperature' => "0",
+    #             'first_layer_temperature' => '205',
+    #             'temperature' => '200'
+    #         }
+    #     };
+    #     Slic3r::Config->write_ini("$datadir/filament/SLA.ini",$iniJ);
+    # }
+
+
+    if (!(-f "$datadir/printer/Julia.ini")) 
+    {  
+         my $iniK = 
+         { 
+            printer =>
+            {
+                 "bed_size" => "200,200",
+                 "end_gcode" => "M104 S0",
+                 "gcode_flavor" => "reprap",
+                 "nozzle_diameter" => "0.5",
+                 "print_center" => "100,100",
+                 "retract_length" => "1",
+                 "retract_lift" => "0",
+                 "start_gcode" => "G28 ; home all axes\nG1 Z5 F5000 ; lift nozzle",
+                 "z_offset" => "0"
             }
-        };
-        Slic3r::Config->write_ini("$datadir/filament/Julia.ini",$iniJ);
+         };
+         Slic3r::Config->write_ini("$datadir/printer/Julia.ini",$iniK);
     }
     # custom code ends
 
