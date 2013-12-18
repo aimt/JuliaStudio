@@ -1,4 +1,2 @@
-JuliaStudio
-===========
-
-Slic3r + Printing for Julia
+Slic3r + print
+for Julia
