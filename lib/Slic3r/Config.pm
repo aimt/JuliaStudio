@@ -159,7 +159,7 @@ our $Options = {
         type    => 'f',
         serialize   => $serialize_comma,
         deserialize => $deserialize_comma,
-        default     => [3],
+        default     => [1.75],
     },
     'extrusion_multiplier' => {
         label   => 'Extrusion multiplier',
@@ -168,7 +168,7 @@ our $Options = {
         type    => 'f',
         serialize   => $serialize_comma,
         deserialize => $deserialize_comma,
-        default => [1],
+        default => [0.95],
     },
     'temperature' => {
         label   => 'Other layers',
@@ -180,7 +180,7 @@ our $Options = {
         max     => 400,
         serialize   => $serialize_comma,
         deserialize => sub { $_[0] ? [ split /,/, $_[0] ] : [0] },
-        default => [200],
+        default => [240],
     },
     'first_layer_temperature' => {
         label   => 'First layer',
@@ -191,7 +191,7 @@ our $Options = {
         serialize   => $serialize_comma,
         deserialize => sub { $_[0] ? [ split /,/, $_[0] ] : [0] },
         max     => 400,
-        default => [200],
+        default => [240],
     },
     
     # extruder mapping
@@ -252,7 +252,7 @@ our $Options = {
         cli     => 'first-layer-bed-temperature=i',
         type    => 'i',
         max     => 300,
-        default => 0,
+        default => 110,
     },
     'bed_temperature' => {
         label   => 'Other layers',
@@ -262,7 +262,7 @@ our $Options = {
         cli     => 'bed-temperature=i',
         type    => 'i',
         max     => 300,
-        default => 0,
+        default => 110,
     },
     
     # speed options
@@ -576,7 +576,7 @@ our $Options = {
         category => 'Layers and Perimeters',
         cli     => 'top-solid-layers=i',
         type    => 'i',
-        default => 5,
+        default => 3,
     },
     'bottom_solid_layers' => {
         label   => 'Bottom',
@@ -586,7 +586,7 @@ our $Options = {
         category => 'Layers and Perimeters',
         cli     => 'bottom-solid-layers=i',
         type    => 'i',
-        default => 5,
+        default => 3,
     },
     'fill_pattern' => {
         label   => 'Fill pattern',
@@ -597,7 +597,7 @@ our $Options = {
         type    => 'select',
         values  => [qw(rectilinear line concentric honeycomb hilbertcurve archimedeanchords octagramspiral)],
         labels  => [qw(rectilinear line concentric honeycomb), 'hilbertcurve (slow)', 'archimedeanchords (slow)', 'octagramspiral (slow)'],
-        default => 'honeycomb',
+        default => 'rectilinear',
     },
     'solid_fill_pattern' => {
         label   => 'Top/bottom fill pattern',
@@ -974,7 +974,7 @@ END
         tooltip => 'This flag enables the automatic cooling logic that adjusts print speed and fan speed according to layer printing time.',
         cli     => 'cooling!',
         type    => 'bool',
-        default => 1,
+        default => 0,
     },
     'min_fan_speed' => {
         label   => 'Min',
@@ -983,7 +983,7 @@ END
         cli     => 'min-fan-speed=i',
         type    => 'i',
         max     => 100,
-        default => 35,
+        default => 60,
     },
     'max_fan_speed' => {
         label   => 'Max',
@@ -1011,7 +1011,7 @@ END
         type    => 'i',
         max     => 1000,
         width   => 60,
-        default => 60,
+        default => 30,
     },
     'slowdown_below_layer_time' => {
         label   => 'Slow down if layer print time is below',
@@ -1021,7 +1021,7 @@ END
         type    => 'i',
         max     => 1000,
         width   => 60,
-        default => 30,
+        default => 10,
     },
     'min_print_speed' => {
         label   => 'Min print speed',
@@ -1030,7 +1030,7 @@ END
         cli     => 'min-print-speed=f',
         type    => 'i',
         max     => 1000,
-        default => 10,
+        default => 30,
     },
     'disable_fan_first_layers' => {
         label   => 'Disable fan for the first',
@@ -1039,14 +1039,14 @@ END
         cli     => 'disable-fan-first-layers=i',
         type    => 'i',
         max     => 1000,
-        default => 1,
+        default => 4,
     },
     'fan_always_on' => {
         label   => 'Keep fan always on',
         tooltip => 'If this is enabled, fan will never be disabled and will be kept running at least at its minimum speed. Useful for PLA, harmful for ABS.',
         cli     => 'fan-always-on!',
         type    => 'bool',
-        default => 0,
+        default => 1,
     },
     
     # skirt/brim options

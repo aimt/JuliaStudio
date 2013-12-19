@@ -68,6 +68,8 @@ sub new {
         $_->Hide for @{$self->{pages}};
         $page->Show;
         $self->{sizer}->Layout;
+        #add code to change the preset
+        #$self->{}
         $self->Refresh;
     });
     EVT_KEY_DOWN($self->{treectrl}, sub {
@@ -338,27 +340,6 @@ sub is_dirty {
 
 sub load_presets {
     my $self = shift;
-    
-    if($self->name eq "printer")
-    {
-        $self->{presets} = [{
-            default => 1,
-            name    => 'Julia',
-        }];
-        
-        opendir my $dh, "$Slic3r::GUI::datadir/" . $self->name or die "Failed to read directory $Slic3r::GUI::datadir/" . $self->name . " (errno: $!)\n";
-        foreach my $file (sort grep /\.ini$/i, readdir $dh) {
-            my $name = basename($file);
-            $name =~ s/\.ini$//;
-            push @{$self->{presets}}, {
-                file => "$Slic3r::GUI::datadir/" . $self->name . "/$file",
-                name => $name,
-            };
-        }
-        closedir $dh;
-    }
-    else
-    {
             $self->{presets} = [{
             default => 1,
             name    => '-default-',
@@ -374,7 +355,7 @@ sub load_presets {
             };
         }
         closedir $dh;
-    }
+    # }
 
     $self->{presets_choice}->Clear;
     $self->{presets_choice}->Append($_->{name}) for @{$self->{presets}};
@@ -408,34 +389,62 @@ sub load_config_file {
     $self->on_presets_changed;
 }
 
+
 package Slic3r::GUI::Tab::Print;
 use base 'Slic3r::GUI::Tab';
 
 sub name { 'print' }
-sub title { 'Print Settings' }
+sub title { 'Settings' }
 
 sub build {
     my $self = shift;
     
-    $self->add_options_page('Layers and perimeters', 'layers.png', optgroups => [
+
+    $self->add_options_page('Print Settings', 'layers.png', optgroups => [
         {
-            title => 'Layer height',
-            options => [qw(layer_height first_layer_height)],
+            title => 'Layers and Perimeters',
+            options => [qw(layer_height spiral_vase)],
         },
         {
-            title => 'Vertical shells',
-            options => [qw(perimeters spiral_vase)],
+            title => 'Infill',
+            options => [qw(fill_density infill_every_layers infill_only_where_needed solid_infill_every_layers solid_infill_below_area only_retract_when_crossing_perimeters infill_first)],
         },
         {
-            title => 'Horizontal shells',
-            options => [qw(top_solid_layers bottom_solid_layers)],
-            lines => [
-                {
-                    label   => 'Solid layers',
-                    options => [qw(top_solid_layers bottom_solid_layers)],
-                },
-            ],
+            title => 'Support material',
+            options => [qw(support_material)],
         },
+        {
+            title => 'Speed for print moves',
+            options => [qw(perimeter_speed small_perimeter_speed external_perimeter_speed infill_speed solid_infill_speed top_solid_infill_speed support_material_speed bridge_speed gap_fill_speed)],
+        },
+        {
+            title => 'Speed for non-print moves',
+            options => [qw(travel_speed)],
+        },
+        {
+            title => 'Modifiers',
+            options => [qw(first_layer_speed)],
+        },
+        {
+            title => 'Acceleration control (advanced)',
+            options => [qw(perimeter_acceleration infill_acceleration bridge_acceleration first_layer_acceleration default_acceleration)],
+        },
+    
+
+        # {
+        #     title => 'Vertical shells',
+        #     options => [qw(perimeters spiral_vase)],
+        # },
+        # {
+        #     title => 'Horizontal shells',
+        #     options => [qw(top_solid_layers bottom_solid_layers)],
+        #     lines => [
+        #         {
+        #             label   => 'Solid layers',
+        #             options => [qw(top_solid_layers bottom_solid_layers)],
+        #         },
+        #     ],
+        # },
         # {
         #     title => 'Quality (slower slicing)',
         #     options => [qw(extra_perimeters avoid_crossing_perimeters start_perimeters_at_concave_points start_perimeters_at_non_overhang thin_walls overhangs)],
@@ -455,43 +464,29 @@ sub build {
         #     options => [qw(randomize_start external_perimeters_first)],
         # },
     ]);
-    
-    $self->add_options_page('Infill', 'shading.png', optgroups => [
+
+
+
+
+
+#added filament option 
+
+
+$self->add_options_page('Filament', 'spool.png', optgroups => [
         {
-            title => 'Infill',
-            options => [qw(fill_density fill_pattern solid_fill_pattern)],
+            title => 'Temperature (°C)',
+            options => ['temperature#0', 'first_layer_temperature#0', qw(bed_temperature first_layer_bed_temperature)],
+            lines => [
+                {
+                    label   => 'Extruder',
+                    options => ['first_layer_temperature#0', 'temperature#0'],
+                },
+                {
+                    label   => 'Bed',
+                    options => [qw(first_layer_bed_temperature bed_temperature)],
+                },
+            ],
         },
-        {
-            title => 'Reducing printing time',
-            options => [qw(infill_every_layers infill_only_where_needed)],
-        },
-        {
-            title => 'Advanced',
-            options => [qw(solid_infill_every_layers fill_angle
-                solid_infill_below_area only_retract_when_crossing_perimeters infill_first)],
-        },
-    ]);
-    
-    $self->add_options_page('Speed', 'time.png', optgroups => [
-        {
-            title => 'Speed for print moves',
-            options => [qw(perimeter_speed small_perimeter_speed external_perimeter_speed infill_speed solid_infill_speed top_solid_infill_speed support_material_speed bridge_speed gap_fill_speed)],
-        },
-        {
-            title => 'Speed for non-print moves',
-            options => [qw(travel_speed)],
-        },
-        {
-            title => 'Modifiers',
-            options => [qw(first_layer_speed)],
-        },
-        {
-            title => 'Acceleration control (advanced)',
-            options => [qw(perimeter_acceleration infill_acceleration bridge_acceleration first_layer_acceleration default_acceleration)],
-        },
-    ]);
-    
-    $self->add_options_page('Skirt and brim', 'box.png', optgroups => [
         {
             title => 'Skirt',
             options => [qw(skirts skirt_distance skirt_height min_skirt_length)],
@@ -501,22 +496,72 @@ sub build {
             options => [qw(brim_width)],
         },
     ]);
+
+
+
+
     
-    $self->add_options_page('Support material', 'building.png', optgroups => [
-        {
-            title => 'Support material',
-            options => [qw(support_material support_material_threshold support_material_enforce_layers)],
-        },
-        {
-            title => 'Raft',
-            options => [qw(raft_layers)],
-        },
-        {
-            title => 'Options for support material and raft',
-            options => [qw(support_material_pattern support_material_spacing support_material_angle
-                support_material_interface_layers support_material_interface_spacing)],
-        },
-    ]);
+    # $self->add_options_page('Infill', 'shading.png', optgroups => [
+    #     {
+    #         title => 'Infill',
+    #         options => [qw(fill_density fill_pattern solid_fill_pattern)],
+    #     },
+    #     {
+    #         title => 'Reducing printing time',
+    #         options => [qw(infill_every_layers infill_only_where_needed)],
+    #     },
+    #     {
+    #         title => 'Advanced',
+    #         options => [qw(solid_infill_every_layers fill_angle
+    #             solid_infill_below_area only_retract_when_crossing_perimeters infill_first)],
+    #     },
+    # ]);
+    
+    # $self->add_options_page('Speed', 'time.png', optgroups => [
+    #     {
+    #         title => 'Speed for print moves',
+    #         options => [qw(perimeter_speed small_perimeter_speed external_perimeter_speed infill_speed solid_infill_speed top_solid_infill_speed support_material_speed bridge_speed gap_fill_speed)],
+    #     },
+    #     {
+    #         title => 'Speed for non-print moves',
+    #         options => [qw(travel_speed)],
+    #     },
+    #     {
+    #         title => 'Modifiers',
+    #         options => [qw(first_layer_speed)],
+    #     },
+    #     {
+    #         title => 'Acceleration control (advanced)',
+    #         options => [qw(perimeter_acceleration infill_acceleration bridge_acceleration first_layer_acceleration default_acceleration)],
+    #     },
+    # ]);
+    
+    # $self->add_options_page('Skirt and brim', 'box.png', optgroups => [
+    #     {
+    #         title => 'Skirt',
+    #         options => [qw(skirts skirt_distance skirt_height min_skirt_length)],
+    #     },
+    #     {
+    #         title => 'Brim',
+    #         options => [qw(brim_width)],
+    #     },
+    # ]);
+    
+    # $self->add_options_page('Support material', 'building.png', optgroups => [
+        # {
+        #     title => 'Support material',
+        #     options => [qw(support_material support_material_threshold support_material_enforce_layers)],
+        # },
+    #     {
+    #         title => 'Raft',
+    #         options => [qw(raft_layers)],
+    #     },
+    #     {
+    #         title => 'Options for support material and raft',
+    #         options => [qw(support_material_pattern support_material_spacing support_material_angle
+    #             support_material_interface_layers support_material_interface_spacing)],
+    #     },
+    # ]);
 
 # No notes    
     # $self->add_options_page('Notes', 'note.png', optgroups => [

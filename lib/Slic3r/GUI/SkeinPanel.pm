@@ -45,7 +45,9 @@ sub new {
     
     my $class_prefix = $self->{mode} eq 'simple' ? "Slic3r::GUI::SimpleTab::" : "Slic3r::GUI::Tab::";
     my $init = 0;
-    for my $tab_name (qw(print filament printer)) {
+#hide printer and filament tab
+#    for my $tab_name (qw(print filament printer)) {
+    for my $tab_name (qw(print)) {
         my $tab;
         $tab = $self->{options_tabs}{$tab_name} = ($class_prefix . ucfirst $tab_name)->new(
             $self->{tabpanel},
