@@ -517,37 +517,39 @@ sub build {
                 support_material_interface_layers support_material_interface_spacing)],
         },
     ]);
+
+# No notes    
+    # $self->add_options_page('Notes', 'note.png', optgroups => [
+    #     {
+    #         title => 'Notes',
+    #         no_labels => 1,
+    #         options => [qw(notes)],
+    #     },
+    # ]);
     
-    $self->add_options_page('Notes', 'note.png', optgroups => [
-        {
-            title => 'Notes',
-            no_labels => 1,
-            options => [qw(notes)],
-        },
-    ]);
-    
-    $self->add_options_page('Output options', 'page_white_go.png', optgroups => [
-        {
-            title => 'Sequential printing',
-            options => [qw(complete_objects extruder_clearance_radius extruder_clearance_height)],
-            lines => [
-                Slic3r::GUI::OptionsGroup->single_option_line('complete_objects'),
-                {
-                    label   => 'Extruder clearance (mm)',
-                    options => [qw(extruder_clearance_radius extruder_clearance_height)],
-                },
-            ],
-        },
-        {
-            title => 'Output file',
-            options => [qw(gcode_comments output_filename_format)],
-        },
-        {
-            title => 'Post-processing scripts',
-            no_labels => 1,
-            options => [qw(post_process)],
-        },
-    ]);
+# No Output Options
+    # $self->add_options_page('Output options', 'page_white_go.png', optgroups => [
+    #     {
+    #         title => 'Sequential printing',
+    #         options => [qw(complete_objects extruder_clearance_radius extruder_clearance_height)],
+    #         lines => [
+    #             Slic3r::GUI::OptionsGroup->single_option_line('complete_objects'),
+    #             {
+    #                 label   => 'Extruder clearance (mm)',
+    #                 options => [qw(extruder_clearance_radius extruder_clearance_height)],
+    #             },
+    #         ],
+    #     },
+    #     {
+    #         title => 'Output file',
+    #         options => [qw(gcode_comments output_filename_format)],
+    #     },
+    #     {
+    #         title => 'Post-processing scripts',
+    #         no_labels => 1,
+    #         options => [qw(post_process)],
+    #     },
+    # ]);
     
     # $self->add_options_page('Multiple Extruders', 'funnel.png', optgroups => [
     #     {
