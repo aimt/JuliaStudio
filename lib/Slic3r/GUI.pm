@@ -53,7 +53,7 @@ our @cb;
 our $Settings = {
     _ => {
         mode => 'expert',
-        version_check => 1,
+        version_check => 0,
     },
 };
 
@@ -81,16 +81,7 @@ sub OnInit {
             unless -d $_;
     }
     
-    # load settings
-    my $last_version;
-    if (-f "$datadir/slic3r.ini") {
-        my $ini = eval { Slic3r::Config->read_ini("$datadir/slic3r.ini") };
-        $Settings = $ini if $ini;
-        $last_version = $Settings->{_}{version};
-        $Settings->{_}{mode} ||= 'expert';
-    }
-    $Settings->{_}{version} = $Slic3r::VERSION;
-    Slic3r::GUI->save_settings;
+
     
     #custom code for Julia printer
        
@@ -111,11 +102,11 @@ sub OnInit {
     #     Slic3r::Config->write_ini("$datadir/filament/PLA.ini",$iniJ);
     # }
 
-    # if (!(-f "$datadir/filament/SLA.ini")) 
+    # if (!(-f "$datadir/filament/ABS.ini")) 
     # {  
     #     my $iniJ = 
     #     {
-    #         options => 
+    #         abs => 
     #         {   "bed_temperature" => "0",
     #             'extrusion_multiplier' => '1',
     #             'filament_diameter' => '3',
@@ -124,30 +115,45 @@ sub OnInit {
     #             'temperature' => '200'
     #         }
     #     };
-    #     Slic3r::Config->write_ini("$datadir/filament/SLA.ini",$iniJ);
+    #     Slic3r::Config->write_ini("$datadir/filament/ABS.ini",$iniJ);
     # }
 
 
-    if (!(-f "$datadir/printer/Julia.ini")) 
-    {  
-         my $iniK = 
-         { 
-            printer =>
-            {
-                 "bed_size" => "200,200",
-                 "end_gcode" => "M104 S0",
-                 "gcode_flavor" => "reprap",
-                 "nozzle_diameter" => "0.5",
-                 "print_center" => "100,100",
-                 "retract_length" => "1",
-                 "retract_lift" => "0",
-                 "start_gcode" => "G28 ; home all axes\nG1 Z5 F5000 ; lift nozzle",
-                 "z_offset" => "0"
-            }
-         };
-         Slic3r::Config->write_ini("$datadir/printer/Julia.ini",$iniK);
-    }
+    # if (!(-f "$datadir/printer/Julia.ini")) 
+    # {  
+    #      my $iniK = 
+    #      { 
+    #         printer =>
+    #         {
+    #              "bed_size" => "200,200",
+    #              "end_gcode" => "M104 S0",
+    #              "gcode_flavor" => "reprap",
+    #              "nozzle_diameter" => "0.5",
+    #              "print_center" => "100,100",
+    #              "retract_length" => "1",
+    #              "retract_lift" => "0",
+    #              "start_gcode" => "G28 ; home all axes\nG1 Z5 F5000 ; lift nozzle",
+    #              "z_offset" => "0"
+    #         }
+    #      };
+    #      Slic3r::Config->write_ini("$datadir/printer/Julia.ini",$iniK);
+    # }
     # custom code ends
+
+
+
+    # load settings
+    my $last_version;
+    if (-f "$datadir/slic3r.ini") {
+        my $ini = eval { Slic3r::Config->read_ini("$datadir/slic3r.ini") };
+        $Settings = $ini if $ini;
+        $last_version = $Settings->{_}{version};
+        $Settings->{_}{mode} ||= 'expert';
+    }
+    $Settings->{_}{version} = $Slic3r::VERSION;
+    Slic3r::GUI->save_settings;
+
+
 
 
 

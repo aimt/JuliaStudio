@@ -149,7 +149,7 @@ our $Options = {
         sidetext => 'mm',
         serialize   => $serialize_comma,
         deserialize => $deserialize_comma,
-        default => [0.5],
+        default => [0.4],
     },
     'filament_diameter' => {
         label   => 'Diameter',
@@ -835,6 +835,7 @@ END
         deserialize => sub { join "\n", split /\\n/, $_[0] },
         default => <<'END',
 M104 S0 ; turn off temperature
+M140 S0 ;
 G28 X0  ; home X axis
 M84     ; disable motors
 END
@@ -885,7 +886,7 @@ END
         type    => 'f',
         serialize   => $serialize_comma,
         deserialize => $deserialize_comma,
-        default => [1],
+        default => [2],
     },
     'retract_speed' => {
         label   => 'Speed',
@@ -926,7 +927,7 @@ END
         type    => 'f',
         serialize   => $serialize_comma,
         deserialize => $deserialize_comma,
-        default => [0],
+        default => [0.21],
     },
     'retract_layer_change' => {
         label   => 'Retract on layer change',
@@ -935,7 +936,7 @@ END
         type    => 'bool',
         serialize   => $serialize_comma_bool,
         deserialize => $deserialize_comma,
-        default => [1],
+        default => [0],
     },
     'wipe' => {
         label   => 'Wipe while retracting',
@@ -1120,7 +1121,7 @@ END
         type    => 'point',
         serialize   => $serialize_comma,
         deserialize => sub { [ split /[,x]/, $_[0] ] },
-        default => [200,200],
+        default => [180,180],
     },
     'duplicate_grid' => {
         label   => 'Copies (grid)',

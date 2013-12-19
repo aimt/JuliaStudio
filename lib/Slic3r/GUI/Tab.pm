@@ -339,22 +339,43 @@ sub is_dirty {
 sub load_presets {
     my $self = shift;
     
-    $self->{presets} = [{
-        default => 1,
-        name    => '- default -',
-    }];
-    
-    opendir my $dh, "$Slic3r::GUI::datadir/" . $self->name or die "Failed to read directory $Slic3r::GUI::datadir/" . $self->name . " (errno: $!)\n";
-    foreach my $file (sort grep /\.ini$/i, readdir $dh) {
-        my $name = basename($file);
-        $name =~ s/\.ini$//;
-        push @{$self->{presets}}, {
-            file => "$Slic3r::GUI::datadir/" . $self->name . "/$file",
-            name => $name,
-        };
+    if($self->name eq "printer")
+    {
+        $self->{presets} = [{
+            default => 1,
+            name    => 'Julia',
+        }];
+        
+        opendir my $dh, "$Slic3r::GUI::datadir/" . $self->name or die "Failed to read directory $Slic3r::GUI::datadir/" . $self->name . " (errno: $!)\n";
+        foreach my $file (sort grep /\.ini$/i, readdir $dh) {
+            my $name = basename($file);
+            $name =~ s/\.ini$//;
+            push @{$self->{presets}}, {
+                file => "$Slic3r::GUI::datadir/" . $self->name . "/$file",
+                name => $name,
+            };
+        }
+        closedir $dh;
     }
-    closedir $dh;
-    
+    else
+    {
+            $self->{presets} = [{
+            default => 1,
+            name    => '-default-',
+        }];
+        
+        opendir my $dh, "$Slic3r::GUI::datadir/" . $self->name or die "Failed to read directory $Slic3r::GUI::datadir/" . $self->name . " (errno: $!)\n";
+        foreach my $file (sort grep /\.ini$/i, readdir $dh) {
+            my $name = basename($file);
+            $name =~ s/\.ini$//;
+            push @{$self->{presets}}, {
+                file => "$Slic3r::GUI::datadir/" . $self->name . "/$file",
+                name => $name,
+            };
+        }
+        closedir $dh;
+    }
+
     $self->{presets_choice}->Clear;
     $self->{presets_choice}->Append($_->{name}) for @{$self->{presets}};
     {
